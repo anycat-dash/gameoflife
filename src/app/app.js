@@ -115,18 +115,21 @@ class Grid extends React.Component{
     */
     //If this was a test and we have moved to the next state for the
     //number of iterations provided, check if we have reached the expected state.
-    if(this.state.test && this.state.counter == this.state.numIter){
-      if(isMatch(this.state.matrix, this.state.expected)){
-        //alert("True");
-        this.setState({testResult : 'Test Result: True'});
+    if(this.state.test){
+      this.setState({testResult : 'Running Test ... ('+this.state.counter+')'});
+      if(this.state.counter == this.state.numIter){
+         if(isMatch(this.state.matrix, this.state.expected)){
+          //alert("True");
+          this.setState({testResult : 'Test Result: True'});
+        }
+        else {
+          //alert('False');
+          this.setState({testResult : 'Test Result: False'});
+        }
+        clearInterval(this.animationTimer);
+        this.animationTimer = false;
+        return;
       }
-      else {
-        //alert('False');
-        this.setState({testResult : 'Test Result: False'});
-      }
-      clearInterval(this.animationTimer);
-      this.animationTimer = false;
-      return;
     }
 
     var result = [];
@@ -183,12 +186,10 @@ class Grid extends React.Component{
       this.generateRandomGrid(this.props.x, this.props.y);
 
     if(this.props.test){
-      this.setState({test : this.props.test, numIter : this.props.numIter, counter : 0, expected: this.props.expected});
-      this.state.testResult = 'Test Result:';
+      this.setState({test : this.props.test, numIter : this.props.numIter, counter : 0, expected: this.props.expected, testResult: 'Running Test...'});
     }
     else{
-      this.setState({test : false, numIter : 0, counter : 0, expected: null});
-      this.state.testResult = ''
+      this.setState({test : false, numIter : 0, counter : 0, expected: null, testResult: ''});
     }
   }
 
@@ -221,12 +222,10 @@ class Grid extends React.Component{
       this.generateRandomGrid(nextProps.x, nextProps.y);
 
     if(nextProps.test){
-      this.setState({test : nextProps.test, numIter : nextProps.numIter, counter : 0, expected: nextProps.expected});
-      this.state.testResult = 'Test Result:';
+      this.setState({test : nextProps.test, numIter : nextProps.numIter, counter : 0, expected: nextProps.expected, testResult: 'Running Test...'});
     }
     else {
-      this.setState({test : false, numIter : 0, counter : 0, expected: null});
-      this.state.testResult = '';
+      this.setState({test : false, numIter : 0, counter : 0, expected: null, testResult: ''});
     }
   }
 
@@ -447,9 +446,7 @@ class ConwayGenerator extends React.Component {
       <div align="center" id="innerDiv">
           <h1 class="underline">Conway's Game of Life</h1>
             <table>
-              <caption><h3>Please use the following inputs to generate an initial Conway's world.
-              Once generated, the world keeps animating to the next state every second.</h3></caption>
-            <tbody>
+              <tbody>
                 <tr>
                   <td class="input">
                     <h3 class="underline">Conway's world generated randomly</h3>
@@ -511,14 +508,19 @@ class ConwayGenerator extends React.Component {
                 </tr>
               </tbody>
             </table>
-    </div>
+        </div>
     );
   }
 }
 
+/**
+ * The main renderable element in the HTML page
+ */
 const mainElement = <ConwayGenerator />;
 
-//Render the Entire Page
+/**
+ * Render the mainElement
+ */
 ReactDOM.render(
   mainElement,
   document.getElementById('rootDiv')
@@ -529,6 +531,7 @@ ReactDOM.render(
  * and return a 2-D array containing 1's and 0's out of it
  */
 function parseMatrix(input, textAreaName){
+  //Some examples of seed matrix
   //[[1,1,1,0,1],[0,1,0,1,0],[1,1,0,0,1],[0,1,0,1,1],[1,0,1,0,1]]
   //[[111][000][010]]
   // [[111][010][010]]
