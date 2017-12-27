@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom';
 class AliveCell extends React.Component{
   render(){
     return(
-      <td class="cell" bgcolor="#000000"></td>
+      <td className="cell" bgcolor="#000000"></td>
     );
   }
 }
@@ -18,7 +18,7 @@ class AliveCell extends React.Component{
 class DeadCell extends React.Component{
   render(){
     return(
-      <td class="cell" bgcolor="#FFFFFF"></td>
+      <td className="cell" bgcolor="#FFFFFF"></td>
     );
   }
 }
@@ -144,7 +144,7 @@ class Grid extends React.Component{
         switch(this.state.matrix[i][j]){
           case 0  :
             //reproduction of cells
-            if(numAliveNbrs == 2 || numAliveNbrs == 3){
+            if(numAliveNbrs == 3){
               result[i][j] = 1;
             }
             //cell stays dead
@@ -377,79 +377,14 @@ class ConwayGenerator extends React.Component {
                 <Grid test={this.state.test} matrix={null} x={this.state.width} y={this.state.height} /> ) :
                null;
 
-    /*return (
-      <div align="center" id="innerDiv">
-        <div align="center" id="formDiv">
-          <h1 class="underline">Conway's Game of Life</h1>
-          <form>
-            <table>
-              <caption><h3>Please use the following inputs to generate an initial Conway's world.
-              Once generated, the world keeps animating to the next state every second.</h3></caption>
-            <tbody>
-                <tr>
-                  <td class="input">
-                    <h3 class="underline">Conway's world generated randomly</h3>
-                    <h4>Please change the Width and Height below <br></br>to generate a grid with random cells.</h4>
-                    <h4>Once generated, the world keeps animating to the next state every second.</h4>
-                    <p></p>
-                    <label>
-                      Width:
-                      <input type="text" name="width" value={this.state.width} onChange={this.handleChange} />
-                    </label>
-                    <p></p>
-                    <label>
-                      Height:
-                      <input type="text" name="height" value={this.state.height} onChange={this.handleChange} />
-                    </label>
-                  </td>
-                  <td class="input">
-                    <h3 class="underline">Conway's world generated from seed</h3>
-                    <h4>Please enter a seed matrix to specify the initial state of the cells.<br></br>
-                    (in the form of a 2-D javascript array). For ex, a 3x3 matrix looks like [[1,1,1],[0,1,0],[1,1,1]]</h4>
-                  <h4>Press "Start with Seed" to start animating the grid.</h4>
-                    <p></p>
-                    <label>
-                      Seed:
-                      <textarea rows="10" cols="20" value={this.state.tainput} name="seed" onChange={this.handleChange} />
-                    </label>
-                    <p></p>
-                    <button onClick={this.handleSeedSubmit}>Start with Seed</button>
-                  </td>
-                  <td class="input">
-                    <h3 class="underline">Test Game</h3>
-                    <h4>Please enter an expected state and the number of iterations for the seed to reach to the expected state.</h4>
-                  <h4>Pressing "test_game" returns true if the seed reaches the expected state in the entered number of iterations, False otherwise.</h4>
-                    <label>
-                      Number of Iterations:
-                      <input width="3px" type="text" name="numIter" value={this.state.numIter} onChange={this.handleChange} />
-                    </label>
-                    <p></p>
-                    <label>
-                      Expected State:
-                      <textarea rows="10" cols="20" value={this.state.esinput} name="expState" onChange={this.handleChange} />
-                    </label>
-                    <p></p>
-                    <button onClick={this.handleTestSubmit}>test_game</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </form>
-        </div>
-        <div align="center" id="gridDiv">
-          {grid}
-        </div>
-    </div>
-    );*/
-
     return (
       <div align="center" id="innerDiv">
-          <h1 class="underline">Conway's Game of Life</h1>
+          <h1 className="underline">Conway's Game of Life</h1>
             <table>
               <tbody>
                 <tr>
-                  <td class="input">
-                    <h3 class="underline">Conway's world generated randomly</h3>
+                  <td className="input">
+                    <h3 className="underline">Conway's world generated randomly</h3>
                     Please change the Width and Height below to generate a grid with random cells.
                     Once generated, the world keeps animating to the next state every second.
                     <p></p>
@@ -470,8 +405,8 @@ class ConwayGenerator extends React.Component {
                   </td>
                 </tr>
                 <tr>
-                  <td class="input">
-                    <h3 class="underline">Conway's world generated from seed</h3>
+                  <td className="input">
+                    <h3 className="underline">Conway's world generated from seed</h3>
                     Please enter a seed matrix to specify the initial state of the cells.
                     (refer to the following example).
                     <br></br>
@@ -488,8 +423,8 @@ class ConwayGenerator extends React.Component {
                   </td>
                 </tr>
                 <tr>
-                  <td class="input">
-                    <h3 class="underline">Test Game</h3>
+                  <td className="input">
+                    <h3 className="underline">Test Game</h3>
                     Please enter an expected state and the number of iterations for the seed to reach to the expected state.
                     Pressing "test_game" returns true if the seed reaches the expected state in the entered number of iterations, False otherwise.
                     <p></p>
@@ -561,7 +496,7 @@ function parseMatrix(input, textAreaName){
   //Size of each row should be the same
   for (var i = 1; i < result.length; i++) {
     if(result[i].length != result[0].length){
-      alert('Input given for Seed/Expected State could not be parsed into a valid matrix. Size of each row is not the same.');
+      alert('Input given for ' + textAreaName + ' could not be parsed into a valid matrix. Size of each row is not the same.');
       return null;
     }
   }
