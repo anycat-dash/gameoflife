@@ -5,7 +5,7 @@
   "main": "index.js",
   "homepage": "https://anycatblank.github.io/gameoflife/",
   "scripts": {
-    "predeploy": "npm run build",
+    "predeploy": "npm run build-prod",
     "deploy": "gh-pages -d dist",
     "build": "webpack -d && copy .\\src\\index.html .\\dist\\index.html && webpack-dev-server --hot --inline --colors --progress --content-base src/",
     "build-prod": "webpack -p && copy .\\src\\index.html .\\dist\\index.html"
