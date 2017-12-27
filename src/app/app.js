@@ -72,9 +72,9 @@ class Grid extends React.Component{
     var result = [];
     console.log('x is' + width);
     console.log('y is' + height);
-    for(var i = 0; i < width; i++){
+    for(var i = 0; i < height; i++){
       result[i] = [];
-      for(var j = 0; j < height; j++){
+      for(var j = 0; j < width; j++){
         result[i][j] = Math.floor(Math.random() * 2);
       }
     }
@@ -211,8 +211,8 @@ class Grid extends React.Component{
 
   render(){
     var rows = [];
-    for(var i=0;i<this.props.x;i++){
-      rows.push(<Myrow key={i} state={this.state.matrix[i]} y={this.props.y} />);
+    for(var i=0;i<this.props.y;i++){
+      rows.push(<Myrow key={i} state={this.state.matrix[i]} y={this.props.x} />);
     }
     return (
       <table>
