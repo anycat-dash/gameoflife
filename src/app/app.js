@@ -1,5 +1,3 @@
-//console.log('Hello');
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -34,9 +32,9 @@ class Myrow extends React.Component{
     var columns = [];
     var i=0;
     //console.log('y is' + this.props.y);
-    while(i < this.props.y){
+    while(i < this.props.cols){
       //console.log('state is ' + this.props.state[i] + " i is " + i);
-      if(this.props.state[i] == 1){
+      if(this.props.rowVal[i] == 1){
         columns.push(<AliveCell key={i}></AliveCell>);
       }
       else{
@@ -52,18 +50,20 @@ class Myrow extends React.Component{
 
 /**
  * This component represents the animating Grid of the game of Life.
-    It shows the state of each cell in the world
+ * It shows the state of each cell in the world.
  */
 class Grid extends React.Component{
   constructor(props){
     super(props);
+    this.animationTimer = false;
     this.state = {
       //this matrix holds the current state of Conway's Game of Life World
       matrix : this.props.matrix,
       expected: this.props.expected,
       numIter: this.props.numIter,
       counter: 0,
-      test: false
+      test: false,
+      testResult: ''
     };
   }
 
@@ -106,9 +106,29 @@ class Grid extends React.Component{
     return numAlive;
   }
 
-  //modify the Game World grid according to the rules
-  //of the Game
+  /* Modify the Game World grid according to the rules of the Game */
   moveToNextState(){
+
+    /* ----Tracing---- */
+    /*
+    console.log("counter is "+ this.state.counter);
+    */
+    //If this was a test and we have moved to the next state for the
+    //number of iterations provided, check if we have reached the expected state.
+    if(this.state.test && this.state.counter == this.state.numIter){
+      if(isMatch(this.state.matrix, this.state.expected)){
+        //alert("True");
+        this.setState({testResult : 'Test Result: True'});
+      }
+      else {
+        //alert('False');
+        this.setState({testResult : 'Test Result: False'});
+      }
+      clearInterval(this.animationTimer);
+      this.animationTimer = false;
+      return;
+    }
+
     var result = [];
     var row = this.state.matrix.length;
     var col = this.state.matrix[0].length;
@@ -145,24 +165,11 @@ class Grid extends React.Component{
     }
     var c = this.state.counter;
     this.setState({matrix: result, counter: c+1});
-
-    /* ----Tracing---- */
-    /*
-    console.log("counter is "+ this.state.counter);
-    */
-
-    //If this was a test and we have moved to the next state for the
-    //number of iterations provided, check if we have reached the expected state.
-    if(this.state.test && this.state.counter == this.state.numIter){
-      if(isMatch(this.state.matrix, this.state.expected)){
-        alert("True");
-      }
-      else {
-        alert('False');
-      }
-    }
   }
 
+  /*
+  * Below are the lifecycle methods of the Grid Component
+  */
   componentWillMount(){
     /* ----Tracing---- */
     /*
@@ -174,20 +181,27 @@ class Grid extends React.Component{
     */
     if(this.state.matrix == null)
       this.generateRandomGrid(this.props.x, this.props.y);
-    if(this.props.test)
-        this.setState({test : this.props.test, numIter : this.props.numIter, counter : 0, expected: this.props.expected});
+
+    if(this.props.test){
+      this.setState({test : this.props.test, numIter : this.props.numIter, counter : 0, expected: this.props.expected});
+      this.state.testResult = 'Test Result:';
+    }
+    else{
+      this.setState({test : false, numIter : 0, counter : 0, expected: null});
+      this.state.testResult = ''
+    }
   }
 
   componentDidMount(){
-    console.log("componentDidMount called");
-    this.animationTimer = setInterval(
-     () => this.moveToNextState(),
-     1000
-   );
+    if(this.animationTimer == false){
+      this.animationTimer = setInterval(
+       () => this.moveToNextState(),
+       100
+      );
+    }
   }
 
   componentWillUnmount() {
-    console.log("componentWillUnmount called");
     clearInterval(this.animationTimer);
   }
 
@@ -200,31 +214,52 @@ class Grid extends React.Component{
     console.log(" test: "+ this.props.test +" numIter: "+ this.props.numIter +" expected is ");
     console.log(this.state.expected);
     */
+
     if(nextProps.matrix != null)
       this.setState({matrix: nextProps.matrix});
     else
       this.generateRandomGrid(nextProps.x, nextProps.y);
 
-    if(nextProps.test)
+    if(nextProps.test){
       this.setState({test : nextProps.test, numIter : nextProps.numIter, counter : 0, expected: nextProps.expected});
+      this.state.testResult = 'Test Result:';
+    }
+    else {
+      this.setState({test : false, numIter : 0, counter : 0, expected: null});
+      this.state.testResult = '';
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    if(this.animationTimer == false){
+      this.animationTimer = setInterval(
+       () => this.moveToNextState(),
+       100
+      );
+    }
   }
 
   render(){
     var rows = [];
-    for(var i=0;i<this.props.y;i++){
-      rows.push(<Myrow key={i} state={this.state.matrix[i]} y={this.props.x} />);
+    for(var i=0; i < this.state.matrix.length; i++){
+      rows.push(<Myrow key={i} rowVal={this.state.matrix[i]} cols={this.state.matrix[0].length} />);
     }
     return (
+      <div>
+        <label id="testResult">
+          {this.state.testResult}
+        </label>
+        <p></p>
       <table>
           <tbody>{rows}</tbody>
       </table>
+      </div>
     );
   }
 }
 
 /**
- * This component is for reading user input
- * and generating the grid.
+ * This component is for reading user input and generating the grid.
  */
 class ConwayGenerator extends React.Component {
   constructor(props) {
@@ -242,7 +277,7 @@ class ConwayGenerator extends React.Component {
       esinput:      ''
     };
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSeedSubmit = this.handleSeedSubmit.bind(this);
     this.handleTestSubmit = this.handleTestSubmit.bind(this)
   }
 
@@ -296,35 +331,44 @@ class ConwayGenerator extends React.Component {
     }
   }
 
-  /* Event listener for submit buttons */
-  handleSubmit(event) {
-    console.log("handleSubmit");
+  /* Event listener for submitting the seed matrix */
+  handleSeedSubmit(event) {
     /* Parse and save the seed input */
-    console.log("seed submit clicked");
-    var mat = parseMatrix(this.state.tainput);
+    var mat = parseMatrix(this.state.tainput, 'Seed');
     if(mat != null)
-    this.setState({test: false, showGrid : true, showWithSeed: true, matrix: mat});
+      this.setState({test: false, showGrid : true, showWithSeed: true, matrix: mat});
     else {
-      alert("Please enter a proper 2-D array in the seed area");
+      this.setState({test: false, showGrid : false, showWithSeed: false, matrix: null});
     }
     event.preventDefault();
   }
 
+  /* Event listener for submitting the expected state matrix */
   handleTestSubmit(event){
-    console.log("test button clicked");
-    var mat = parseMatrix(this.state.tainput);
-    var mat2 = parseMatrix(this.state.esinput)
-    if(mat != null && mat2 != null)
-    this.setState({test : true, showGrid : false, showWithSeed: false, matrix : mat, expected : mat2});
+    //this.setState({test : true, showGrid : false, showWithSeed: false});
+    var mat = parseMatrix(this.state.tainput, 'Seed');
+    var mat2 = parseMatrix(this.state.esinput, 'Expected State');
+
+    if(mat != null && mat2 != null){
+      if(mat.length != mat2.length || mat[0].length != mat2[0].length){
+        this.setState({test : false});
+        alert("The seed's and expected state's dimensions don't match");
+      }
+      else
+        this.setState({test : true, showGrid : false, showWithSeed: false, matrix : mat, expected : mat2});
+    }
     else {
-      alert("Please enter a proper 2-D array in the seed/expected state areas");
+      this.setState({test : false, showGrid : false, showWithSeed: false, matrix : null, expected : null});
     }
     event.preventDefault();
   }
 
   render() {
+      /* ----Tracing---- */
+      /*
     console.log("conway render: showgrid: " + this.state.showGrid +" showWithSeed:" +this.state.showWithSeed);
     console.log("conway render: rows is "+this.state.matrix.length+" columns is "+this.state.matrix[0].length+ " matrix is "+this.state.matrix);
+    */
     var grid = this.state.test?
                <Grid test={this.state.test} numIter={this.state.numIter} expected={this.state.expected} ex matrix={this.state.matrix}
                  x={this.state.matrix.length} y={this.state.matrix[0].length}/>:
@@ -334,11 +378,11 @@ class ConwayGenerator extends React.Component {
                 <Grid test={this.state.test} matrix={null} x={this.state.width} y={this.state.height} /> ) :
                null;
 
-    return (
+    /*return (
       <div align="center" id="innerDiv">
         <div align="center" id="formDiv">
           <h1 class="underline">Conway's Game of Life</h1>
-          <form onSubmit={this.handleSubmit}>
+          <form>
             <table>
               <caption><h3>Please use the following inputs to generate an initial Conway's world.
               Once generated, the world keeps animating to the next state every second.</h3></caption>
@@ -370,7 +414,7 @@ class ConwayGenerator extends React.Component {
                       <textarea rows="10" cols="20" value={this.state.tainput} name="seed" onChange={this.handleChange} />
                     </label>
                     <p></p>
-                    <input type="submit" name="seedSubmit" value="Start with Seed" />
+                    <button onClick={this.handleSeedSubmit}>Start with Seed</button>
                   </td>
                   <td class="input">
                     <h3 class="underline">Test Game</h3>
@@ -397,14 +441,86 @@ class ConwayGenerator extends React.Component {
           {grid}
         </div>
     </div>
+    );*/
+
+    return (
+      <div align="center" id="innerDiv">
+          <h1 class="underline">Conway's Game of Life</h1>
+            <table>
+              <caption><h3>Please use the following inputs to generate an initial Conway's world.
+              Once generated, the world keeps animating to the next state every second.</h3></caption>
+            <tbody>
+                <tr>
+                  <td class="input">
+                    <h3 class="underline">Conway's world generated randomly</h3>
+                    Please change the Width and Height below to generate a grid with random cells.
+                    Once generated, the world keeps animating to the next state every second.
+                    <p></p>
+                    <label>
+                      Width:
+                      <input type="text" name="width" value={this.state.width} onChange={this.handleChange} />
+                    </label>
+                    <p></p>
+                    <label>
+                      Height:
+                      <input type="text" name="height" value={this.state.height} onChange={this.handleChange} />
+                    </label>
+                  </td>
+                  <td rowSpan = "3">
+                    <div align="center" id="gridDiv">
+                      {grid}
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="input">
+                    <h3 class="underline">Conway's world generated from seed</h3>
+                    Please enter a seed matrix to specify the initial state of the cells.
+                    (refer to the following example).
+                    <br></br>
+                    For ex, a 3x3 matrix looks like [[111][010][111]]
+                    <br></br>
+                    Press "Start with Seed" to start animating the grid.
+                    <p></p>
+                    <label>
+                      Seed:
+                      <textarea rows="5" cols="20" value={this.state.tainput} name="seed" onChange={this.handleChange} />
+                    </label>
+                    <br></br>
+                    <button onClick={this.handleSeedSubmit}>Start with Seed</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="input">
+                    <h3 class="underline">Test Game</h3>
+                    Please enter an expected state and the number of iterations for the seed to reach to the expected state.
+                    Pressing "test_game" returns true if the seed reaches the expected state in the entered number of iterations, False otherwise.
+                    <p></p>
+                    <label>
+                      Number of Iterations:
+                      <input width="3px" type="text" name="numIter" value={this.state.numIter} onChange={this.handleChange} />
+                    </label>
+                    <p></p>
+                    <label>
+                      Expected State:
+                      <textarea rows="5" cols="20" value={this.state.esinput} name="expState" onChange={this.handleChange} />
+                    </label>
+                    <p></p>
+                    <button onClick={this.handleTestSubmit}>test_game</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+    </div>
     );
   }
 }
 
-const element2 = <ConwayGenerator />;
+const mainElement = <ConwayGenerator />;
 
+//Render the Entire Page
 ReactDOM.render(
-  element2,
+  mainElement,
   document.getElementById('rootDiv')
 );
 
@@ -412,34 +528,52 @@ ReactDOM.render(
  * Parse the string input provided in a text area
  * and return a 2-D array containing 1's and 0's out of it
  */
-function parseMatrix(input){
+function parseMatrix(input, textAreaName){
   //[[1,1,1,0,1],[0,1,0,1,0],[1,1,0,0,1],[0,1,0,1,1],[1,0,1,0,1]]
-  //[[1,1,1],[0,0,0],[0,1,0]]
-  //[[1,1,1],[0,1,0],[0,1,0]]
-  var rows = input.split("[");
-  var result = [];
+  //[[111][000][010]]
+  // [[111][010][010]]
 
+  //regex matcher for proper format of the input
+  if(!(/^\[(\s*\[(0|1|\s)+\]\s*)*\]$/.test(input.trim()))){
+    alert('Provided input in the ' + textAreaName + ' text area is not in the correct format.');
+    return null;
+  }
+
+  var rows = input.trim().split("[");
+  var result = [];
+  var j = 0;
+
+  //go through each row and split the string at [, and fill up
+  //the result matrix with each 0 or 1
   for(var i=2; i < rows.length; i++){
-    //console.log("parseMatrix: substr"+ rows[i].substring(0, (rows[i].length - 2)) + " length is " + rows[i].length);
-    var cols = rows[i].substring(0, (rows[i].length - 2)).split(",");
     result[i-2] = [];
-    for (var j = 0; j < cols.length; j++) {
-      if(parseInt(cols[j]) == 0 || parseInt(cols[j]) == 1){
-        result[i-2][j] = parseInt(cols[j]);
-      }
-      else {
-        continue;
+    j = 0;
+    for (var c of rows[i]) {
+      if(parseInt(c) == 0 || parseInt(c) == 1){
+        result[i-2][j++] = parseInt(c);
       }
     }
   }
-  //console.log("parseMatrix: result ");
-  //console.log(result);
+
+  //Size of each row should be the same
+  for (var i = 1; i < result.length; i++) {
+    if(result[i].length != result[0].length){
+      alert('Input given for Seed/Expected State could not be parsed into a valid matrix. Size of each row is not the same.');
+      return null;
+    }
+  }
+
+  //empty matrix. As far as our app is concerned, just return null
+  if(result.length == 0)
+    return null;
+
+console.log("parseMatrix returned");
+console.log(result);
   return result;
 }
 
-
 /**
- * This function check if 2 2-D arrays are equal.
+ * This function check if 2 matrices are equal.
  * Returns true/false
  */
 function isMatch(matrix, expected){
