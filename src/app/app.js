@@ -31,9 +31,7 @@ class Myrow extends React.Component{
   render(){
     var columns = [];
     var i=0;
-    //console.log('y is' + this.props.y);
     while(i < this.props.cols){
-      //console.log('state is ' + this.props.state[i] + " i is " + i);
       if(this.props.rowVal[i] == 1){
         columns.push(<AliveCell key={i}></AliveCell>);
       }
@@ -67,26 +65,32 @@ class Grid extends React.Component{
     };
   }
 
-  //generate a random initial Game World Grid
+  /**
+   * Generate a random initial Game World Grid
+   */
   generateRandomGrid(width, height){
     var result = [];
-    console.log('x is' + width);
-    console.log('y is' + height);
+    //store the randomly generated matrix in result.
     for(var i = 0; i < height; i++){
       result[i] = [];
       for(var j = 0; j < width; j++){
         result[i][j] = Math.floor(Math.random() * 2);
       }
     }
-    console.log(result);
+    //set the world state matrix to result
     this.setState({matrix: result, counter: 0});
   }
 
+  /**
+   * check if a particular coordinate lies inside the matrix
+   */
   isSafe(i,j){
-    //console.log("isSafe: i: "+ i +" j: "+ j + " row is " +this.state.matrix.length+ " col is "+this.state.matrix[0].length);
     return (i >= 0 && i < this.state.matrix.length && j >= 0 && j < this.state.matrix[0].length);
   }
 
+  /**
+   * Returns the number of alive neighbors of a particular cell
+   */
   numAliveNeighbors(i,j){
     var xDir = [-1,0,1];
     var yDir = [-1,0,1];
@@ -99,7 +103,8 @@ class Grid extends React.Component{
         if(a == 1 && b == 1)
           continue;
         //increment the number of alive neighbors
-        if(this.isSafe(i+xDir[a], j+yDir[b]) && (this.state.matrix[i+xDir[a]][j+yDir[b]] == 1))
+        if(this.isSafe(i+xDir[a], j+yDir[b]) &&           //coordinate lies within matrix boundary
+          (this.state.matrix[i+xDir[a]][j+yDir[b]] == 1)) //neighbor is alive
           numAlive++;
       }
     }
@@ -139,8 +144,6 @@ class Grid extends React.Component{
       result[i] = [];
       for(var j=0; j < col; j++){
         var numAliveNbrs = this.numAliveNeighbors(i,j);
-        //console.log('numalive is '+numAliveNbrs);
-        //console.log('matrix[i][j] is '+this.state.matrix[i][j]);
         switch(this.state.matrix[i][j]){
           case 0  :
             //reproduction of cells
@@ -317,15 +320,11 @@ class ConwayGenerator extends React.Component {
 
     //New input in the Seed text area
     if(event.target.name == "seed"){
-      //var mat = parseMatrix(event.target.value);
-      //console.log("onchange: mat is "+ mat);
       this.setState({test: false, showGrid : false, showWithSeed: false, tainput : event.target.value});
     }
 
     //New input in the Expected State text area
     if(event.target.name == "expState"){
-      //var mat = parseMatrix(event.target.value);
-      //console.log("onchange: mat is "+ mat);
       this.setState({test: false, showGrid : false, showWithSeed: false, esinput : event.target.value});
     }
   }
@@ -466,12 +465,7 @@ ReactDOM.render(
  * and return a 2-D array containing 1's and 0's out of it
  */
 function parseMatrix(input, textAreaName){
-  //Some examples of seed matrix
-  //[[1,1,1,0,1],[0,1,0,1,0],[1,1,0,0,1],[0,1,0,1,1],[1,0,1,0,1]]
-  //[[111][000][010]]
-  // [[111][010][010]]
-
-  //regex matcher for proper format of the input
+  //regex matcher for checking proper format of the input
   if(!(/^\[(\s*\[(0|1|\s)+\]\s*)*\]$/.test(input.trim()))){
     alert('Provided input in the ' + textAreaName + ' text area is not in the correct format.');
     return null;
@@ -505,8 +499,11 @@ function parseMatrix(input, textAreaName){
   if(result.length == 0)
     return null;
 
-console.log("parseMatrix returned");
-console.log(result);
+  /* ----Tracing---- */
+  /*
+  console.log("parseMatrix returned");
+  console.log(result);
+  */
   return result;
 }
 
