@@ -22,14 +22,14 @@ Example of Seed -
 ```
 Please refer to the end of this README for more interesting seed inputs for the game.
 
-3) Test Game
+3) Test Game -
 This section gives you a way to test out if the app follows the rules of the game correctly.
-Please provide a number of iterations and an expected state in the same format as the seed provided above.
-Click on the test_game button to see if the seed reached the expected state in the number of iterations provided.
-You will see the test result at the top of the animating grid in the form of True or False.
+Please enter a "number of iterations" and an "expected state" in the same format as the seed entered above.
+Click on the test_game button to see if the seed reaches the expected state in the number of iterations entered.
+You will see the test result at the top of the animating grid as a text message with True or False.
 
 ## System requirements
-Any browser that runs javascript. The input validation errors are presented as an alert pop-up. You might not see the input errors if your browser has pop-up blocker enabled.
+Any browser that runs javascript(ES2015). The input validation errors are presented as an alert pop-up. You might not see the input errors if your browser has pop-up blocker enabled.
 
 The website has been tested with the latest version of chrome.
 
