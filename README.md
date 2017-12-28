@@ -43,12 +43,7 @@ The website has been tested with the latest version of chrome.
 * [GitHub Pages](https://pages.github.com/) - Deployment
 
 ## Authors
-
 * **Aniket Dash**
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
 ## Citations and helpful materials
 [Wikipedia for interesting inputs for the game](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
