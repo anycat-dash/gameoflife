@@ -87,7 +87,7 @@ In addition to the above, the system was manually tested using the following tes
 [000000000000000000000000000000000000]]
 ```
 
-2)Lightweight Spaceship
+2) Lightweight Spaceship
 ```
 [[000000000000000000000000000000000000]
 [000000000000000000000000000000000000]
