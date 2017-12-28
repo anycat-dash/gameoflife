@@ -29,7 +29,7 @@ Click on the test_game button to see if the seed reaches the expected state in t
 You will see the test result at the top of the animating grid as a text message with True or False.
 
 ## System requirements
-Any browser that runs javascript(ES2015). The input validation errors are presented as an alert pop-up. You might not see the input errors if your browser has pop-up blocker enabled.
+Any browser that runs javascript(ES2015). The input validation errors are presented as alert pop-ups. You might not see the input errors if your browser has pop-up blocker enabled.
 
 The website has been tested with the latest version of chrome.
 
@@ -38,7 +38,7 @@ The website has been tested with the latest version of chrome.
 * [HTML, CSS](https://maven.apache.org/) - UI
 * [Webpack](https://webpack.js.org/) - Bundler
 * [Babel](https://babeljs.io/) - Javascript Compiler
-* [GIT](https://github.com/) - Version Control
+* [GIT](https://github.com/) - Version Controll
 * [GitHub Pages](https://pages.github.com/) - Deployment
 
 ## Authors
@@ -46,7 +46,6 @@ The website has been tested with the latest version of chrome.
 
 ## Citations and helpful materials
 [Wikipedia for interesting inputs for the game](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
-
 [Reactjs docs](https://reactjs.org/docs/hello-world.html)
 
 ## Interesting inputs for the game
@@ -75,7 +74,7 @@ The website has been tested with the latest version of chrome.
 [000000000000000000000000000000000000]]
 ```
 
-2)LightWeight Space Ship
+2)Lightweight Spaceship
 ```
 [[000000000000000000000000000000000000]
 [000000000000000000000000000000000000]
@@ -101,7 +100,7 @@ The website has been tested with the latest version of chrome.
 [000000000000000000000000000000000000]]
 ```
 
-3) PentaDecathlon
+3) Pentadecathlon
 ```
 [[000000000000000000000000000000000000]
 [000000000000000000000000000000000000]
