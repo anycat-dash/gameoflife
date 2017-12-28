@@ -4,7 +4,7 @@
 The website is hosted on GitHub Pages at the following link-
 https://anycatblank.github.io/gameoflife/
 
-## How to control and test the Game
+## Game Controls
 There are 3 input sections in the page
 
 1) Conway's world generated randomly -
@@ -27,6 +27,13 @@ This section gives you a way to test out if the app follows the rules of the gam
 Please enter a "number of iterations" and an "expected state" in the same format as the seed entered above.
 Click on the test_game button to see if the seed reaches the expected state in the number of iterations entered.
 You will see the test result at the top of the animating grid as a text message with True or False.
+
+### Game Testing
+In addition to the above, the system was manually tested using the following test cases -
+1) Positive Tests - By using several inputs that converge to static, oscillating or moving colonies.
+2) Negative Tests - By entering deliberate wrong format inputs to check input validation.
+3) Corner cases - By entering empty inputs and boundary conditions like matrices with all 1 or 0.
+3) Scale Test - By increasing the width and height of the matrix. It was observed that the responsiveness of the animation decreases when dealing with matrices larger than 200X200 dimension.
 
 ## System requirements
 Any browser that runs javascript(ES2015). The input validation errors are presented as alert pop-ups. You might not see the input errors if your browser has pop-up blocker enabled.
