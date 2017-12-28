@@ -4,7 +4,7 @@
 The website is hosted on GitHub Pages at the following link-
 https://anycatblank.github.io/gameoflife/
 
-### How to control and test the Game
+## How to control and test the Game
 There are 3 input sections in the page
 
 1) Conway's world generated randomly -
@@ -15,7 +15,7 @@ Every time the matrix dimension changes, a random initial state for the cells is
 You may provide a seed representing the initial state of the game's world. Please note that it expects the seed in the format presented in the examples below. Click on the Start with seed button to start animating the world.
 
 ```
-Example of Seeds -
+Example of Seed -
 1) Blinker - (a 5X5 matrix consisting of 0's and 1's, each row enclosed in square brackets)
 [[00000][00100][00100][00100][00000]]
 
@@ -28,13 +28,12 @@ Please provide a number of iterations and an expected state in the same format a
 Click on the test_game button to see if the seed reached the expected state in the number of iterations provided.
 You will see the test result at the top of the animating grid in the form of True or False.
 
-### System requirements
+## System requirements
 Any browser that runs javascript. The input validation errors are presented as an alert pop-up. You might not see the input errors if your browser has pop-up blocker enabled.
 
 The website has been tested with the latest version of chrome.
 
-## Built With
-
+## Technologies and Packages used
 * [reactjs](https://reactjs.org/) - Web Framework
 * [HTML, CSS](https://maven.apache.org/) - UI
 * [Webpack](https://webpack.js.org/) - Bundler
@@ -50,7 +49,7 @@ The website has been tested with the latest version of chrome.
 
 [Reactjs docs](https://reactjs.org/docs/hello-world.html)
 
-## Intersting inputs for the game
+## Interesting inputs for the game
 1) Glider
 ```
 [[000000000000000000000000000000000000]
