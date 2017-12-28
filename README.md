@@ -16,10 +16,48 @@ You may provide a seed representing the initial state of the game's world. Pleas
 
 ```
 Example of Seeds -
-1) 3X3 matrix (matrix consists of 0's and 1's, each row enclosed in square brackets)
-[[111][010][111]]
+1) Blinker - (a 5X5 matrix consisting of 0's and 1's, each row enclosed in square brackets)
+[[00000][00100][00100][00100][00000]]
 
-2) Glider - Glider
+```
+Please refer to the end of this README for more interesting seed inputs for the game.
+
+3) Test Game
+This section gives you a way to test out if the app follows the rules of the game correctly.
+Please provide a number of iterations and an expected state in the same format as the seed provided above.
+
+Click on the test_game button to see if the seed reached the expected state in the number of iterations provided.
+You will see the test result at the top of the animating grid in the form of True or False.
+
+### System requirements
+Any browser that runs javascript. The input validation errors are presented as an alert pop-up. You might not see the input errors if your browser has pop-up blocker enabled.
+
+The website has been tested with the latest version of chrome.
+
+## Built With
+
+* [reactjs](https://reactjs.org/) - Web Framework
+* [HTML, CSS](https://maven.apache.org/) - UI
+* [Webpack](https://webpack.js.org/) - Bundler
+* [Babel](https://babeljs.io/) - Javascript Compiler
+* [GIT](https://github.com/) - Version Control
+* [GitHub Pages](https://pages.github.com/) - Deployment
+
+## Authors
+
+* **Aniket Dash**
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Citations and helpful materials
+[Wikipedia for interesting inputs for the game](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
+
+[Reactjs docs](https://reactjs.org/docs/hello-world.html)
+
+## Intersting inputs for the game
+1) Glider - Glider
 [[000000000000000000000000000000000000]
 [000000000000100000000000000000000000]
 [000000000000010000000000000000000000]
@@ -42,7 +80,7 @@ Example of Seeds -
 [000000000000000000000000000000000000]
 [000000000000000000000000000000000000]]
 
-3)LightWeight Space Ship
+2)LightWeight Space Ship
 [[000000000000000000000000000000000000]
 [000000000000000000000000000000000000]
 [000000000000000000000000000000000000]
@@ -66,7 +104,7 @@ Example of Seeds -
 [000000000000000000000000000000000000]
 [000000000000000000000000000000000000]]
 
-4) PentaDecathlon
+3) PentaDecathlon
 [[000000000000000000000000000000000000]
 [000000000000000000000000000000000000]
 [000000000000000000000000000000000000]
@@ -89,41 +127,3 @@ Example of Seeds -
 [000000000000000000000000000000000000]
 [000000000000000000000000000000000000]
 [000000000000000000000000000000000000]]
-
-```
-
-3) Test Game
-This section gives you a way to test out if the app follows the rules of the game correctly.
-Please provide a number of iterations and an expected state in the same format as the seed provided above.
-
-Click on the test_game button to see if the seed reached the expected state in the number of iterations provided.
-You will see the test result at the top of the animating grid in the form of True or False.
-
-### System requirements
-Any browser that runs javascript. The input validation errors are presented as an alert pop-up. You might not see the input errors if your browser has pop-up blocker enabled.
-
-The website has been tested with the latest version of chrome.
-
-## Built With
-
-* [reactjs](https://reactjs.org/) - Web Framework
-* [HTML, CSS](https://maven.apache.org/) - UI
-* [Webpack](https://webpack.js.org/) - Bundler
-* [Babel](https://babeljs.io/) - Javascript Compiler
-* [GIT](https://github.com/, https://pages.github.com/) - Version Control
-* [GitHub Pages](https://github.com/, https://pages.github.com/) - Deployment
-
-## Authors
-
-* **Aniket Dash**
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Citations and helpful materials
-Wikipedia for interesting inputs for the game
-https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
-
-reactjs docs
-https://reactjs.org/docs/hello-world.html

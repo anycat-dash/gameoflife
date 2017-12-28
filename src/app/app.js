@@ -2,7 +2,71 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 /**
- * This component represents a Alive Cell
+ * Parse the string input provided in a text area
+ * and return a 2-D array containing 1's and 0's out of it
+ */
+function parseMatrix(input, textAreaName){
+  //regex matcher for checking proper format of the input
+  if(!(/^\[(\s*\[(0|1|\s)+\]\s*)*\]$/.test(input.trim()))){
+    alert('Provided input in the ' + textAreaName + ' text area is not in the correct format.');
+    return null;
+  }
+
+  var rows = input.trim().split("[");
+  var result = [];
+  var j = 0;
+
+  //go through each character of the string and fill the result matrix with 0's and 1's
+  for(var i=2; i < rows.length; i++){
+    result[i-2] = [];
+    j = 0;
+    for (var c of rows[i]) {
+      if(parseInt(c) == 0 || parseInt(c) == 1){
+        result[i-2][j++] = parseInt(c);
+      }
+    }
+  }
+
+  //Size of each row should be the same
+  for (var i = 1; i < result.length; i++) {
+    if(result[i].length != result[0].length){
+      alert('Input given for ' + textAreaName + ' could not be parsed into a valid matrix. Size of each row is not the same.');
+      return null;
+    }
+  }
+
+  //empty matrix. As far as our app is concerned, just return null
+  if(result.length == 0)
+    return null;
+
+  /* ----Tracing -> uncomment for debugging---- */
+  /*
+  console.log("parseMatrix returned");
+  console.log(result);
+  */
+  return result;
+}
+
+/**
+ * Check if 2 matrices are equal and returns true/false
+ */
+function isMatch(matrix, expected){
+  //return false if rows and cols of matrices dont match
+  if(matrix.length != expected.length || matrix[0].length != expected[0].length)
+    return false;
+
+  for(var x = 0; x < matrix.length; x++){
+    for(var y = 0; y < matrix[0].length; y++){
+      if(matrix[x][y] != expected[x][y])
+        return false;
+    }
+  }
+
+  return true;
+}
+
+/**
+ * This component represents an Alive Cell
  */
 class AliveCell extends React.Component{
   render(){
@@ -47,13 +111,16 @@ class Myrow extends React.Component{
 }
 
 /**
- * This component represents the animating Grid of the game of Life.
+ * This component represents the animating Grid of the Game of Life.
  * It shows the state of each cell in the world.
  */
 class Grid extends React.Component{
   constructor(props){
     super(props);
+    //handle to the timer that keeps animating the game
     this.animationTimer = false;
+    //the animation interval in milliseconds
+    this.animationInterval = 100;
     this.state = {
       //this matrix holds the current state of Conway's Game of Life World
       matrix : this.props.matrix,
@@ -66,7 +133,7 @@ class Grid extends React.Component{
   }
 
   /**
-   * Generate a random initial Game World Grid
+   * Generate a random initial Game's World Grid
    */
   generateRandomGrid(width, height){
     var result = [];
@@ -82,14 +149,14 @@ class Grid extends React.Component{
   }
 
   /**
-   * check if a particular coordinate lies inside the matrix
+   * Check if a particular coordinate lies inside the matrix
    */
   isSafe(i,j){
     return (i >= 0 && i < this.state.matrix.length && j >= 0 && j < this.state.matrix[0].length);
   }
 
   /**
-   * Returns the number of alive neighbors of a particular cell
+   * Return the number of alive neighbors of a particular cell
    */
   numAliveNeighbors(i,j){
     var xDir = [-1,0,1];
@@ -114,24 +181,19 @@ class Grid extends React.Component{
   /* Modify the Game World grid according to the rules of the Game */
   moveToNextState(){
 
-    /* ----Tracing---- */
+    /* ----Tracing -> uncomment for debugging---- */
     /*
     console.log("counter is "+ this.state.counter);
     */
-    //If this was a test and we have moved to the next state for the
+    //If this is a test and we have moved to the next state for the
     //number of iterations provided, check if we have reached the expected state.
     if(this.state.test){
       this.setState({testResult : 'Running Test ... ('+this.state.counter+')'});
       if(this.state.counter == this.state.numIter){
-         if(isMatch(this.state.matrix, this.state.expected)){
-          //alert("True");
-          this.setState({testResult : 'Test Result: True'});
-        }
-        else {
-          //alert('False');
-          this.setState({testResult : 'Test Result: False'});
-        }
+        this.setState({testResult : 'Test Result: ' + isMatch(this.state.matrix, this.state.expected)});
         clearInterval(this.animationTimer);
+        //the test ran for the number of iterations provided
+        //Stop animating the grid
         this.animationTimer = false;
         return;
       }
@@ -140,6 +202,9 @@ class Grid extends React.Component{
     var result = [];
     var row = this.state.matrix.length;
     var col = this.state.matrix[0].length;
+
+    //iterate through the entire matrix, Calculate the number of Alive
+    //neighbors for each cell and decide the cell's fate in the next state.
     for(var i=0; i < row; i++){
       result[i] = [];
       for(var j=0; j < col; j++){
@@ -177,7 +242,7 @@ class Grid extends React.Component{
   * Below are the lifecycle methods of the Grid Component
   */
   componentWillMount(){
-    /* ----Tracing---- */
+    /* ----Tracing -> uncomment for debugging---- */
     /*
     console.log("componentWillMount is called");
     console.log("pros x: "+ this.props.x + " prop y: "+ this.props.y +" matrix is ");
@@ -200,7 +265,7 @@ class Grid extends React.Component{
     if(this.animationTimer == false){
       this.animationTimer = setInterval(
        () => this.moveToNextState(),
-       100
+       this.animationInterval
       );
     }
   }
@@ -210,7 +275,7 @@ class Grid extends React.Component{
   }
 
   componentWillReceiveProps(nextProps){
-    /* ----Tracing---- */
+    /* ----Tracing -> uncomment for debugging---- */
     /*
     console.log("componentWillReceiveProps is called");
     console.log("pros x: "+ nextProps.x +"prop y: "+ nextProps.y +" matrix is ");
@@ -236,7 +301,7 @@ class Grid extends React.Component{
     if(this.animationTimer == false){
       this.animationTimer = setInterval(
        () => this.moveToNextState(),
-       100
+       this.animationInterval
       );
     }
   }
@@ -343,17 +408,16 @@ class ConwayGenerator extends React.Component {
 
   /* Event listener for submitting the expected state matrix */
   handleTestSubmit(event){
-    //this.setState({test : true, showGrid : false, showWithSeed: false});
     var mat = parseMatrix(this.state.tainput, 'Seed');
-    var mat2 = parseMatrix(this.state.esinput, 'Expected State');
+    var expectedMat = parseMatrix(this.state.esinput, 'Expected State');
 
-    if(mat != null && mat2 != null){
-      if(mat.length != mat2.length || mat[0].length != mat2[0].length){
+    if(mat != null && expectedMat != null){
+      if(mat.length != expectedMat.length || mat[0].length != expectedMat[0].length){
         this.setState({test : false});
         alert("The seed's and expected state's dimensions don't match");
       }
       else
-        this.setState({test : true, showGrid : false, showWithSeed: false, matrix : mat, expected : mat2});
+        this.setState({test : true, showGrid : false, showWithSeed: false, matrix : mat, expected : expectedMat});
     }
     else {
       this.setState({test : false, showGrid : false, showWithSeed: false, matrix : null, expected : null});
@@ -362,7 +426,7 @@ class ConwayGenerator extends React.Component {
   }
 
   render() {
-      /* ----Tracing---- */
+      /* ----Tracing -> uncomment for debugging---- */
       /*
     console.log("conway render: showgrid: " + this.state.showGrid +" showWithSeed:" +this.state.showWithSeed);
     console.log("conway render: rows is "+this.state.matrix.length+" columns is "+this.state.matrix[0].length+ " matrix is "+this.state.matrix);
@@ -385,7 +449,6 @@ class ConwayGenerator extends React.Component {
                   <td className="input">
                     <h3 className="underline">Conway's world generated randomly</h3>
                     Please change the Width and Height below to generate a grid with random cells.
-                    Once generated, the world keeps animating to the next state every second.
                     <p></p>
                     <label>
                       Width:
@@ -396,6 +459,7 @@ class ConwayGenerator extends React.Component {
                       Height:
                       <input type="text" name="height" value={this.state.height} onChange={this.handleChange} />
                     </label>
+                    <p></p>
                   </td>
                   <td rowSpan = "3">
                     <div align="center" id="gridDiv">
@@ -409,7 +473,7 @@ class ConwayGenerator extends React.Component {
                     Please enter a seed matrix to specify the initial state of the cells.
                     (refer to the following example).
                     <br></br>
-                    For ex, a 3x3 matrix looks like [[111][010][111]]
+                    For ex, a 5X5 matrix looks like [[00000][00100][00100][00100][00000]]
                     <br></br>
                     Press "Start with Seed" to start animating the grid.
                     <p></p>
@@ -419,13 +483,14 @@ class ConwayGenerator extends React.Component {
                     </label>
                     <br></br>
                     <button onClick={this.handleSeedSubmit}>Start with Seed</button>
+                    <p></p>
                   </td>
                 </tr>
                 <tr>
                   <td className="input">
                     <h3 className="underline">Test Game</h3>
                     Please enter an expected state and the number of iterations for the seed to reach to the expected state.
-                    Pressing "test_game" returns true if the seed reaches the expected state in the entered number of iterations, False otherwise.
+                    Pressing "test_game" returns true if the seed reaches the expected state in the given number of iterations, False otherwise.
                     <p></p>
                     <label>
                       Number of Iterations:
@@ -438,6 +503,7 @@ class ConwayGenerator extends React.Component {
                     </label>
                     <p></p>
                     <button onClick={this.handleTestSubmit}>test_game</button>
+                    <p></p>
                   </td>
                 </tr>
               </tbody>
@@ -459,69 +525,3 @@ ReactDOM.render(
   mainElement,
   document.getElementById('rootDiv')
 );
-
-/**
- * Parse the string input provided in a text area
- * and return a 2-D array containing 1's and 0's out of it
- */
-function parseMatrix(input, textAreaName){
-  //regex matcher for checking proper format of the input
-  if(!(/^\[(\s*\[(0|1|\s)+\]\s*)*\]$/.test(input.trim()))){
-    alert('Provided input in the ' + textAreaName + ' text area is not in the correct format.');
-    return null;
-  }
-
-  var rows = input.trim().split("[");
-  var result = [];
-  var j = 0;
-
-  //go through each row and split the string at [, and fill up
-  //the result matrix with each 0 or 1
-  for(var i=2; i < rows.length; i++){
-    result[i-2] = [];
-    j = 0;
-    for (var c of rows[i]) {
-      if(parseInt(c) == 0 || parseInt(c) == 1){
-        result[i-2][j++] = parseInt(c);
-      }
-    }
-  }
-
-  //Size of each row should be the same
-  for (var i = 1; i < result.length; i++) {
-    if(result[i].length != result[0].length){
-      alert('Input given for ' + textAreaName + ' could not be parsed into a valid matrix. Size of each row is not the same.');
-      return null;
-    }
-  }
-
-  //empty matrix. As far as our app is concerned, just return null
-  if(result.length == 0)
-    return null;
-
-  /* ----Tracing---- */
-  /*
-  console.log("parseMatrix returned");
-  console.log(result);
-  */
-  return result;
-}
-
-/**
- * This function check if 2 matrices are equal.
- * Returns true/false
- */
-function isMatch(matrix, expected){
-  //return false if rows and cols of matrices dont match
-  if(matrix.length != expected.length || matrix[0].length != expected[0].length)
-    return false;
-
-  for(var x = 0; x < matrix.length; x++){
-    for(var y = 0; y < matrix[0].length; y++){
-      if(matrix[x][y] != expected[x][y])
-        return false;
-    }
-  }
-
-  return true;
-}
