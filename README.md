@@ -1,8 +1,8 @@
-# Conway's Game of Life
+# Conway's Game of Life - My experience with learning React
 
 ## How to run the game
 The website is hosted on GitHub Pages at the following link-
-https://anycatblank.github.io/gameoflife/
+https://anycat-dash.github.io/gameoflife/
 
 Note:
 * The bundled source code that is deployed on the link above can be found in the "gh-pages" branch of this repository.
